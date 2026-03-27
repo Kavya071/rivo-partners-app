@@ -62,7 +62,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={[styles.stickyHeader, {
-        paddingTop: insets.top > 0 ? insets.top : 48,
+        paddingTop: insets.top > 0 ? insets.top + r.sp(16) : 48,
         paddingHorizontal: r.sp(24),
       }]}>
         <View style={[styles.greetingRow, { gap: r.sp(16), marginBottom: r.sp(32) }]}>

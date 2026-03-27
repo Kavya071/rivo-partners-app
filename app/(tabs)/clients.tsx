@@ -28,6 +28,7 @@ const FILTER_TABS = [
   { key: "ALL", label: "All", color: "#FFFFFF", bg: "#27272A" },
   { key: "SUBMITTED", label: "Submitted", color: "#60A5FA", bg: "#1E3A5F" },
   { key: "CONTACTED", label: "Contacted", color: "#A78BFA", bg: "#2E1F5E" },
+  { key: "QUALIFIED", label: "Qualified", color: "#F59E0B", bg: "#3D2F00" },
   { key: "SUBMITTED_TO_BANK", label: "At Bank", color: "#FBBF24", bg: "#3D2F00" },
   { key: "PREAPPROVED", label: "Preapproved", color: "#34D399", bg: "#0D3B2E" },
   { key: "FOL_RECEIVED", label: "FOL", color: "#2DD4BF", bg: "#0D3D38" },
@@ -151,7 +152,7 @@ export default function ClientsScreen() {
         style={[
           styles.headerSection,
           {
-            paddingTop: insets.top > 0 ? insets.top : 48,
+            paddingTop: insets.top > 0 ? insets.top + r.sp(16) : 48,
             paddingHorizontal: r.screenPadding,
             paddingBottom: r.sp(20),
           },

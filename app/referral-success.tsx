@@ -95,7 +95,7 @@ export default function ReferralSuccessScreen() {
             <View style={styles.infoCardText}>
               <Text style={[styles.infoCardTitle, { fontSize: r.fs(15) }]}>Track in Clients</Text>
               <Text style={[styles.infoCardDesc, { fontSize: r.fs(13) }]}>
-                View progress in your dashboard.
+                View progress status in Client tab.
               </Text>
             </View>
           </View>
@@ -104,7 +104,7 @@ export default function ReferralSuccessScreen() {
 
       <Animated.View entering={FadeIn.delay(1100).duration(400)}>
         <Pressable
-          onPress={() => router.replace("/(tabs)/home")}
+          onPress={() => router.replace("/(tabs)/clients")}
           style={({ pressed }) => [
             styles.doneBtn,
             { marginTop: r.sp(16) },

@@ -8,16 +8,27 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "331738587654-087blgg1lca6c1ja4sr310ivd7622oe8.apps.googleusercontent.com",
+        "EXPO_PUBLIC_MICROSOFT_CLIENT_ID": "810d9324-17ba-4a15-ae8b-b2b9b1f61b83"
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
+      }
     }
   }
 }

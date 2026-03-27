@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ import * as WebBrowser from "expo-web-browser";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import Colors from "@/constants/colors";
 import { getMe, updateProfile, logout, deleteAccount } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
@@ -93,39 +93,50 @@ export default function ProfileScreen() {
 
   const handleOutlookSignIn = async () => {
     if (!MICROSOFT_CLIENT_ID) return;
-    const redirectUri = "rivopartners://auth";
-    const authUrl =
-      `https://login.microsoftonline.com/common/oauth2/v2.0/authorize` +
-      `?client_id=${MICROSOFT_CLIENT_ID}` +
-      `&response_type=code` +
-      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-      `&scope=${encodeURIComponent("openid email profile User.Read")}` +
-      `&response_mode=query`;
+    setConnectingOutlookState(true);
+    try {
+      const redirectUri = "rivopartners://auth";
+      const authUrl =
+        `https://login.microsoftonline.com/common/oauth2/v2.0/authorize` +
+        `?client_id=${MICROSOFT_CLIENT_ID}` +
+        `&response_type=code` +
+        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+        `&scope=${encodeURIComponent("openid email profile User.Read")}` +
+        `&response_mode=query`;
 
-    await WebBrowser.openAuthSessionAsync(authUrl, redirectUri);
-    // The auth.tsx route handler will catch the redirect and process the code
+      await WebBrowser.openAuthSessionAsync(authUrl, redirectUri);
+      // The auth.tsx route handler will catch the redirect and process the code
+    } catch (err) {
+      console.warn("Outlook sign-in error:", err);
+    } finally {
+      setConnectingOutlookState(false);
+    }
   };
 
   useEffect(() => {
     if (agent) {
       setName(agent.name ?? "");
-      setEmail(agent.email ?? "");
+      if (!isEditing) {
+        setEmail(agent.email ?? "");
+      }
       setAgentType(agent.agent_type ?? "");
       setAgentTypeOther(agent.agent_type_other ?? "");
       setReraNumber(agent.rera_number ?? "");
       setIsEditing(!agent.is_profile_complete);
     }
-  }, [agent]);
+  }, [agent, isEditing]);
 
-  // Pick up Outlook email set by auth.tsx redirect handler
-  useEffect(() => {
-    AsyncStorage.getItem("rivo_outlook_email").then((outlookEmail) => {
-      if (outlookEmail) {
-        setEmail(outlookEmail);
-        AsyncStorage.removeItem("rivo_outlook_email");
-      }
-    });
-  }, []);
+  // Pick up Outlook email set by auth.tsx redirect handler — runs on every focus
+  useFocusEffect(
+    useCallback(() => {
+      AsyncStorage.getItem("rivo_outlook_email").then((outlookEmail) => {
+        if (outlookEmail) {
+          setEmail(outlookEmail);
+          AsyncStorage.removeItem("rivo_outlook_email");
+        }
+      });
+    }, [])
+  );
 
   const showReraField = agentType === "RE_BROKER";
   const showOtherField = agentType === "OTHER";
@@ -191,7 +202,7 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <View style={[styles.header, {
-        paddingTop: insets.top > 0 ? insets.top + r.sp(8) : 48,
+        paddingTop: insets.top > 0 ? insets.top + r.sp(16) : 48,
         paddingHorizontal: r.screenPadding,
         paddingBottom: r.sectionGap,
       }]}>
@@ -350,7 +361,7 @@ export default function ProfileScreen() {
 
         <Text style={[styles.sectionTitle, { fontSize: r.fs(16), marginBottom: r.sp(16), marginTop: r.sectionGap }]}>Connect Accounts</Text>
 
-        {isEditing && !email && (
+        {isEditing && !email.trim() && (
           <>
             <View style={{ gap: r.sp(12), marginBottom: r.sp(16) }}>
               <Pressable

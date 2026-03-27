@@ -45,6 +45,7 @@ export default function SubmitLeadScreen() {
   const [phoneBlurred, setPhoneBlurred] = useState(false);
 
   const commissionRate = 0.45;
+  const MIN_LOAN_AMOUNT = 5000;
 
   const numericAmount = useMemo(() => {
     const parsed = parseFloat(loanAmount.replace(/,/g, ""));
@@ -68,7 +69,7 @@ export default function SubmitLeadScreen() {
 
   const canSubmit =
     clientName.trim().length > 0 &&
-    numericAmount > 0 &&
+    numericAmount >= MIN_LOAN_AMOUNT &&
     isPhoneValid &&
     !submitting &&
     !isSelfReferral;
@@ -173,7 +174,12 @@ export default function SubmitLeadScreen() {
               maxLength={12}
             />
           </View>
-          {numericAmount > 0 && (
+          {numericAmount > 0 && numericAmount < MIN_LOAN_AMOUNT && (
+            <Text style={[styles.errorText, { fontSize: r.fs(12) }]}>
+              Minimum loan amount is AED {MIN_LOAN_AMOUNT.toLocaleString("en-AE")}
+            </Text>
+          )}
+          {numericAmount >= MIN_LOAN_AMOUNT && (
             <Text style={[styles.calcHelper, { fontSize: r.fs(12) }]}>
               {numericAmount.toLocaleString("en-AE")} x {commissionRate}% = AED{" "}
               {commission.toLocaleString("en-AE", { maximumFractionDigits: 0 })}
@@ -413,6 +419,11 @@ const styles = StyleSheet.create({
   calcHelper: {
     fontFamily: "Inter_400Regular",
     color: Colors.primary,
+    marginLeft: 2,
+  },
+  errorText: {
+    fontFamily: "Inter_400Regular",
+    color: Colors.danger,
     marginLeft: 2,
     marginTop: 2,
   },

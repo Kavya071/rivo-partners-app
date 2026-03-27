@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Rivo Partners",
-    "slug": "rivo-partners",
-    "owner": "rivoaiteam",
+    "slug": "mobile",
+    "owner": "kavya07070",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -27,6 +27,7 @@
     "android": {
       "package": "com.rivopartners.mobile",
       "googleServicesFile": "./google-services.json",
+      "targetSdkVersion": 35,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "monochromeImage": "./assets/images/monochrome-icon.png",
@@ -61,7 +62,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "1d584ba2-278c-4b59-b797-b99f0e06a837"
+        "projectId": "59a10cc6-4530-4ec3-bc89-54c8b29e7a98"
       }
     }
   }
